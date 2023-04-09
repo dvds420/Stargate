@@ -1,0 +1,27 @@
+const Web3 = require('web3');
+const web3 = new Web3('https://ropsten.infura.io/v3/YOUR_PROJECT_ID'); // замените YOUR_PROJECT_ID на свой Infura-идентификатор
+
+const token1Address = '0x...'; // адрес токена, который вы хотите обменять
+const token2Address = '0x...'; // адрес токена, на который вы хотите обменять
+const token1Amount = web3.utils.toWei('10', 'ether'); // количество токена1, которое вы хотите обменять, указанное в wei
+const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // deadline в Unix-формате времени, здесь установлено на 20 минут от текущего времени
+
+const routerAddress = '0x...'; // адрес Uniswap-роутера
+
+const privateKey = 'YOUR_PRIVATE_KEY'; // ваш приватный ключ
+
+const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+web3.eth.accounts.wallet.add(account);
+
+const contract = new web3.eth.Contract(abi, routerAddress);
+
+contract.methods.swapExactTokensForTokens(
+  token1Amount,
+  0,
+  [token1Address, token2Address],
+  account.address,
+  deadline
+)
+.send({ from: account.address, gas: 6000000 })
+.then(console.log);
+
